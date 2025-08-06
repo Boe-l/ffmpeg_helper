@@ -43,6 +43,12 @@ class FFMpegHelper {
 
   Future<bool> isFFMpegPresent() async {
     if (Platform.isWindows) {
+       ProcessResult process = await Process.run('where', ['ffmpeg']);
+
+      if (process.stdout.toString().contains('ffmpeg.exe')) {
+        _ffmpegBinDirectory = process.stdout.toString().trim().replaceAll('\\ffmpeg.exe', '');
+        return true;
+      }
       if ((_ffmpegBinDirectory == null) || (_tempFolderPath == null)) {
         await initialize();
       }
